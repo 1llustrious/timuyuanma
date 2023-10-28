@@ -1,0 +1,12 @@
+
+version: "3"
+services:
+
+  web:
+    build:
+      context: .  # 构建上下文，指定 Dockerfile 相对路径或 URL
+      dockerfile: Dockerfile  # 指定使用的 Dockerfile 文件
+    ports:
+      - "1145:80"
+      
+

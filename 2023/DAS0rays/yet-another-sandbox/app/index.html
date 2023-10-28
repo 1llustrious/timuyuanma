@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+
+<html>
+
+
+
+<!-- core file -->
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"
+    integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+/>
+
+<!-- assist theme -->
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css"
+    integrity="sha512-gFMl3u9d0xt3WR8ZeW05MWm3yZ+ZfgsBVXLSOiFz2xeVrZ8Neg0+V1kkRIo9LikyA/T9HuS91kDfc2XWse0K0A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+/>
+
+<!-- core file -->
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"
+integrity="sha512-sSWQXoxIkE0G4/xqLngx5C53oOZCgFRxWE79CvMX2X0IKx14W3j9Dpz/2MpRh58xb2W/h+Y4WAHJQA0qMMuxJg=="
+crossorigin="anonymous"
+referrerpolicy="no-referrer"
+></script>
+
+<!-- assist highlight -->
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"
+integrity="sha512-Cbz+kvn+l5pi5HfXsEB/FYgZVKjGIhOgYNBwj4W2IHP2y8r3AdyDCQRnEUqIQ+6aJjygKPTyaNT2eIihaykJlw=="
+crossorigin="anonymous"
+referrerpolicy="no-referrer"
+></script>
+
+
+<head>
+<title>JavaScript Online Runner</title>
+</head>
+<body>
+
+
+
+<style type="text/css">
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+
+.item {
+    margin-bottom: 20px;
+}
+
+body {
+    background-color: #f7f7f7;
+}
+img {
+    width:600px;
+    height:120px;
+    border-style: solid;
+    border-width: 20px;
+    border-color: #f7f7f7;
+}
+.CodeMirror {
+    font-size: 16px;
+}
+</style>
+
+
+<div class="container">
+    <div class="item">
+        <img src="asserts/header.png" />
+    </div>
+    <div class="item">
+        <textarea id="online-editor">
+function add(a, b) {
+    return a+b;
+};
+
+const x = add(1, 2);
+x;</textarea>
+    </div>
+    <div class="item">
+        <a href="#" id="run">RunScript (Ctrl+Enter)</a>
+    </div>
+    <div class="item">
+        <p id="result">Output:&nbsp;</p>
+    </div>
+</div>
+
+
+</body>
+<script type="text/javascript">
+
+document.getElementById('run').addEventListener('click', function(){
+  runScript();
+})
+
+function runScript() {
+    code = editor.getValue();
+    fetch('/api/run', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"code": code})
+    })
+    .then(response => response.json())
+    .then(jsonResponse => {
+    console.log(jsonResponse);
+    document.getElementById('result').innerText = 'Output: ' + jsonResponse.msg;
+    })
+    .catch(error => {
+    document.getElementById('result').innerText = 'Output: ' + error;
+  });
+}
+
+var editor = CodeMirror.fromTextArea(document.getElementById("online-editor"),{
+    lineNumbers: true,
+    autofocus: true,
+    theme: "dracula",
+    mode: "javascript",
+    extraKeys:{
+        "Ctrl-Enter": runScript
+    }
+});
+
+editor.setSize(1000);
+
+
+
+</script>
+</html>
