@@ -1,0 +1,8 @@
+2023/11/01 19:46:24.373 [I] [nps.go:202]  the version of server is 0.26.10 ,allow client core version to be 0.26.0
+2023/11/01 19:46:24.834 [I] [connection.go:36]  server start, the bridge type is tcp, the bridge port is 8080
+2023/11/01 19:46:24.836 [I] [server.go:200]  tunnel task  start mode：httpHostServer port 0
+2023/11/01 19:46:24.836 [I] [connection.go:68]  Web management start, access port is 8080
+2023/11/01 19:46:24.837 [I] [connection.go:62]  start https listener, port is 443
+2023/11/01 19:46:24.837 [I] [connection.go:53]  start http listener, port is 80
+2023/11/01 19:46:42.715 [N] [http.go:143]  the url http 127.0.0.1 / can't be parsed!
+2023/11/01 19:46:50.562 [W] [nps.go:187]  stop...
